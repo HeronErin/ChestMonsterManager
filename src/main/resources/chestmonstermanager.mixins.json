@@ -1,11 +1,16 @@
 {
-	"required": true,
-	"package": "me.sweetpickleswine.chestmonstermanager.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"ExampleMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "me.sweetpickleswine.chestmonstermanager.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ExampleMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "HandlerScreenAccessor",
+    "InGameHudMixin",
+    "ScreenInvoker"
+  ]
 }

@@ -13,6 +13,7 @@ public class InitHandler implements IInitializationHandler {
     @Override
     public void registerModHandlers()
     {
+
         ConfigManager.getInstance().registerConfigHandler(ChestMonsterManager.ModId, new Config());
 
         InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());

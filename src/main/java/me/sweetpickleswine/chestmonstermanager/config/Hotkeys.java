@@ -9,13 +9,13 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import me.sweetpickleswine.chestmonstermanager.ChestMonsterManager;
 import me.sweetpickleswine.chestmonstermanager.gui.ConfigScreen;
+import me.sweetpickleswine.chestmonstermanager.mixin.InGameHudMixin;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.List;
 
 public class Hotkeys {
-    public static final ConfigHotkey OPEN_GUI_MAIN_MENU = new ConfigHotkey("openGuiMainMenu", "M", KeybindSettings.RELEASE_EXCLUSIVE, "Open the ChestMonsterManager main menu");
-
+    public static final ConfigHotkey OPEN_GUI_MAIN_MENU = new ConfigHotkey("Open gui", "C", KeybindSettings.RELEASE_EXCLUSIVE, "Open the ChestMonsterManager main menu");
 
 
     public static final List<ConfigHotkey> HOTKEY_LIST = ImmutableList.of(
@@ -27,6 +27,7 @@ public class Hotkeys {
         KeyCallbackHotkeys callbackHotkeys = new KeyCallbackHotkeys(MinecraftClient.getInstance());
 
         OPEN_GUI_MAIN_MENU.getKeybind().setCallback(callbackHotkeys);
+
 
     }
     private static class KeyCallbackHotkeys implements IHotkeyCallback
