@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.sweetpickleswine.chestmonstermanager.ChestMonsterManager;
 import me.sweetpickleswine.chestmonstermanager.config.Config;
 import me.sweetpickleswine.chestmonstermanager.gui.MultiClickButton;
+import me.sweetpickleswine.chestmonstermanager.sorting.InventoryActionTracker;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
@@ -24,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 import java.util.Iterator;
+
+import static me.sweetpickleswine.chestmonstermanager.ChestMonsterManager.inventoryActionTracker;
 
 @Mixin(HandledScreen.class)
 public abstract class InGameHudMixin {
@@ -64,6 +67,8 @@ public abstract class InGameHudMixin {
         private static boolean isGoingUp = false;
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     private void onRenderHead(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo info) {
+        if (MinecraftClient.getInstance().player == null)
+            return;
         if (ChestMonsterManager.lastButton.isSelected()){
             info.cancel();
             this.drawBackground(context, delta, mouseX, mouseY);
@@ -78,7 +83,14 @@ public abstract class InGameHudMixin {
             this.drawForeground(context, mouseX, mouseY);
             context.getMatrices().pop();
 
+            if (inventoryActionTracker == null){
+                inventoryActionTracker = new InventoryActionTracker(MinecraftClient.getInstance().player.currentScreenHandler);
+                inventoryActionTracker=inventoryActionTracker.ClickSlot(0).ClickSlot(1).ClickSlot(2);
+            }
+            inventoryActionTracker.render(context, mouseX, mouseY, this.x, this.y);
+
         }
+        else if (inventoryActionTracker != null){inventoryActionTracker=null;}
     }
 
 }

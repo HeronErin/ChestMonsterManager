@@ -3,6 +3,7 @@ package me.sweetpickleswine.chestmonstermanager;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import me.sweetpickleswine.chestmonstermanager.sorting.InventoryActionTracker;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -24,7 +25,7 @@ public class ChestMonsterManager implements ModInitializer {
     }
 
     public static ButtonWidget lastButton = null;
-    public static Boolean doRenderItems = true;
+    public static InventoryActionTracker inventoryActionTracker = null;
 
 
 
