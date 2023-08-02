@@ -1,6 +1,11 @@
 {
   "CMM.config.title": "ChestMonsterManager config screen",
   "CMM.config.generic": "generic",
+
+
+
+
   "CMM.config.by_name": "Sort by Name",
-  "CMM.config.by_cat": "Sort by Category"
+  "CMM.config.by_cat": "Sort by Category",
+  "CMM.config.just_merge": "Automatically combine only"
 }

@@ -25,10 +25,12 @@ public class Config implements IConfigHandler {
 
     public static final ConfigOptionList SORTING_ACTION = new ConfigOptionList("Sort action", SortType.NAME, "What the button in inventories do");
 
+    public static final ConfigInteger SORT_ACTION_DELAY = new ConfigInteger("Sort action delay", 75, 25, 400, true, "Time in milliseconds between button clicking (lower = faster)");
+
 
     public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
             Hotkeys.OPEN_GUI_MAIN_MENU,
-
+            SORT_ACTION_DELAY,
             SORTING_ACTION
     );
 

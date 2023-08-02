@@ -8,7 +8,9 @@ import me.sweetpickleswine.chestmonstermanager.ChestMonsterManager;
 public enum SortType implements IConfigOptionListEntry {
 
     NAME    ("name",    "CMM.config.by_name"),
-    BY_CAT   ("cat",   "CMM.config.by_cat");
+    BY_CAT   ("cat",   "CMM.config.by_cat"),
+
+    JUST_MERGE ("just", "CMM.config.just_merge");
 //    SQUARE  ("square",  "CMM.config.by_name");
 
     private final String configString;
@@ -63,8 +65,8 @@ private SortType(String configString, String translationKey)
                 return NAME;
             case "cat":
                 return BY_CAT;
-//            case "square":
-//                return SQUARE;
+            case "just":
+                return JUST_MERGE;
             default:
                 ChestMonsterManager.LOGGER.error("String of " + name + " given to fromString() SortType");
                 return NAME;
