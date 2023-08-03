@@ -9,6 +9,7 @@ public enum SortType implements IConfigOptionListEntry {
 
     NAME    ("name",    "CMM.config.by_name"),
     BY_CAT   ("cat",   "CMM.config.by_cat"),
+    RANDOM   ("rand",   "CMM.config.by_rand"),
 
     JUST_MERGE ("just", "CMM.config.just_merge");
 //    SQUARE  ("square",  "CMM.config.by_name");

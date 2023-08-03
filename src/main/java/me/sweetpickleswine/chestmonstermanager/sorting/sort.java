@@ -6,10 +6,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.sweetpickleswine.chestmonstermanager.sorting.SortCases.getStringForSort;
@@ -30,23 +27,30 @@ public class sort {
 
     public static InventoryActionTracker<? extends net.minecraft.screen.ScreenHandler> nameSort(InventoryActionTracker<? extends net.minecraft.screen.ScreenHandler> inventoryActionTracker, SortType sortType){
         inventoryActionTracker=MergeMaker.autoMerge(inventoryActionTracker);
-        List<PseudoSlot> newSlots = inventoryActionTracker.newInv.stream().sorted((o1, o2) -> {
-            PseudoSlot slot1 = o1;
-            PseudoSlot slot2 = o2;
-            boolean slot1IsAir = isItemAir(slot1);
-            boolean slot2IsAir = isItemAir(slot2);
-            if (slot1IsAir && slot2IsAir)
-                return 0;
-            if (slot1IsAir)
-                return 1;
-            if (slot2IsAir)
-                return -1;
+        List<PseudoSlot> newSlots;
+        if (sortType!=SortType.RANDOM)
+            newSlots = inventoryActionTracker.newInv.stream().sorted((o1, o2) -> {
+                PseudoSlot slot1 = o1;
+                PseudoSlot slot2 = o2;
+                boolean slot1IsAir = isItemAir(slot1);
+                boolean slot2IsAir = isItemAir(slot2);
+                if (slot1IsAir && slot2IsAir)
+                    return 0;
+                if (slot1IsAir)
+                    return 1;
+                if (slot2IsAir)
+                    return -1;
 
-            return getStringForSort(slot1.itemStack, sortType).compareTo(getStringForSort(slot2.itemStack, sortType));
+                return getStringForSort(slot1.itemStack, sortType).compareTo(getStringForSort(slot2.itemStack, sortType));
 
 
 
-        }).collect(Collectors.toList());
+
+            }).collect(Collectors.toList());
+        else{
+            newSlots = new ArrayList<>(inventoryActionTracker.newInv);
+            Collections.shuffle(newSlots);
+        }
 
         return oldToSorted(newSlots, inventoryActionTracker);
     }

@@ -27,6 +27,7 @@ public class SortCases {
             case NAME -> {
                 if (stack.hasCustomName()) return stack.getName() + itemName;
             }
+
         }
 
 
