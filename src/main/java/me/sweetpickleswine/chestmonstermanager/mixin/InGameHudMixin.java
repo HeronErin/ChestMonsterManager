@@ -4,6 +4,7 @@ import me.sweetpickleswine.chestmonstermanager.ChestMonsterManager;
 import me.sweetpickleswine.chestmonstermanager.config.Config;
 import me.sweetpickleswine.chestmonstermanager.config.ListOptions.SortType;
 import me.sweetpickleswine.chestmonstermanager.gui.MultiClickButton;
+import me.sweetpickleswine.chestmonstermanager.gui.SortButtonHelper;
 import me.sweetpickleswine.chestmonstermanager.sorting.InventoryActionTracker;
 import me.sweetpickleswine.chestmonstermanager.sorting.sort;
 import net.minecraft.client.MinecraftClient;
@@ -24,14 +25,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
+
 import static me.sweetpickleswine.chestmonstermanager.ChestMonsterManager.inventoryActionTracker;
 import static me.sweetpickleswine.chestmonstermanager.sorting.MergeMaker.autoMerge;
 
 @Mixin(HandledScreen.class)
 public abstract class InGameHudMixin {
-    private static final Identifier identifier = new Identifier(ChestMonsterManager.ModId, "textures/sort_buttons_atlas.png");
 
-    private static boolean lastHoverSorted = false;
+
 
     @Shadow protected int backgroundHeight;
 
@@ -43,35 +45,15 @@ public abstract class InGameHudMixin {
 
     @Shadow protected abstract void drawForeground(DrawContext context, int mouseX, int mouseY);
 
+    @Inject(at = @At("HEAD"), method = "close")
+    private void onClose(CallbackInfo ci){
+        ChestMonsterManager.ContainingSlots=-1;
+    }
     @Inject(at = @At("RETURN"), method = "init")
     private void init(CallbackInfo info){
-        if (MinecraftClient.getInstance().player.currentScreenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler ||
-                MinecraftClient.getInstance().player.currentScreenHandler instanceof FurnaceScreenHandler ||
-                MinecraftClient.getInstance().player.currentScreenHandler instanceof AnvilScreenHandler ||
-                MinecraftClient.getInstance().player.currentScreenHandler instanceof EnchantmentScreenHandler ||
-                MinecraftClient.getInstance().player.currentScreenHandler instanceof MerchantScreenHandler)
-            return;
+        SortButtonHelper.addButton(this.x, this.y, this.backgroundWidth, this.backgroundHeight);
 
-        MultiClickButton tbw = new MultiClickButton( this.backgroundWidth+this.x-20-1, this.y+1, 20, 18, 0, 0, 19, identifier, (button) -> {
-            // Sort
-            System.out.println("sort");
-            if (inventoryActionTracker != null && !lastHoverSorted){
-                inventoryActionTracker.commit();
-                inventoryActionTracker=null;
-                lastHoverSorted=true;
-            }
-        },(button) -> {
-            // Nothing
-            System.out.println("Middle");
-        }, (button) -> {
-            // Right click
-            Config.SORTING_ACTION.setOptionListValue(Config.SORTING_ACTION.getOptionListValue().cycle(true));
-            button.setTooltip(Tooltip.of(Text.of(Config.SORTING_ACTION.getOptionListValue().getDisplayName())));
-            inventoryActionTracker = null;
-        });
-        ChestMonsterManager.lastButton = tbw;
-        tbw.setTooltip(Tooltip.of(Text.of(Config.SORTING_ACTION.getOptionListValue().getDisplayName())));
-        ((ScreenInvoker) MinecraftClient.getInstance().currentScreen).addDrawableChildInvoker(tbw);
+
 
 
         }
@@ -83,11 +65,12 @@ public abstract class InGameHudMixin {
             return;
         if (ChestMonsterManager.lastButton != null)
         if (ChestMonsterManager.lastButton.isSelected()){
-            if (lastHoverSorted)
+            if (SortButtonHelper.lastHoverSorted)
                 return;
             info.cancel();
-            this.drawBackground(context, delta, mouseX, mouseY);
 
+            this.drawBackground(context, delta, mouseX, mouseY);
+            context.fill(this.x, this.y, this.x+this.backgroundWidth, this.y+this.backgroundHeight, new Color(255, 0, 0, 20).getRGB());
 
             for (Drawable drawable : ((ScreenInvoker)this).getDrawables()){
                 drawable.render(context, mouseX, mouseY, delta);
@@ -99,7 +82,7 @@ public abstract class InGameHudMixin {
             context.getMatrices().pop();
 
             if (inventoryActionTracker == null){
-                inventoryActionTracker = new InventoryActionTracker(MinecraftClient.getInstance().player.currentScreenHandler);
+                inventoryActionTracker = new InventoryActionTracker(MinecraftClient.getInstance().player.currentScreenHandler, SortButtonHelper.inInventoryIncludeSelector);
 
 
                 if (Config.SORTING_ACTION.getOptionListValue() == SortType.JUST_MERGE){
@@ -112,7 +95,7 @@ public abstract class InGameHudMixin {
 
         }
         else if (inventoryActionTracker != null){inventoryActionTracker=null;}
-        else{lastHoverSorted=false;}
+        else{SortButtonHelper.lastHoverSorted=false;}
     }
 
 }

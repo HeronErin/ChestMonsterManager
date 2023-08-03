@@ -29,7 +29,7 @@ public class sort {
     }
 
     public static InventoryActionTracker<? extends net.minecraft.screen.ScreenHandler> nameSort(InventoryActionTracker<? extends net.minecraft.screen.ScreenHandler> inventoryActionTracker, SortType sortType){
-
+        inventoryActionTracker=MergeMaker.autoMerge(inventoryActionTracker);
         List<PseudoSlot> newSlots = inventoryActionTracker.newInv.stream().sorted((o1, o2) -> {
             PseudoSlot slot1 = o1;
             PseudoSlot slot2 = o2;

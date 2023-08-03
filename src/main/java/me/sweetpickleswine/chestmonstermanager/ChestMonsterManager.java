@@ -27,6 +27,9 @@ public class ChestMonsterManager implements ModInitializer {
     public static ButtonWidget lastButton = null;
     public static InventoryActionTracker inventoryActionTracker = null;
 
+    public static int ContainingSlots = -1;
+
+
 
 
 
